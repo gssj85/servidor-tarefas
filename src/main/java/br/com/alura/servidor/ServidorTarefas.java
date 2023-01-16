@@ -1,7 +1,10 @@
 package br.com.alura.servidor;
 
+import br.com.alura.cliente.DistribuirTarefas;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executors;
 
 public class ServidorTarefas {
     public static void main(String[] args) throws Exception {
@@ -10,9 +13,12 @@ public class ServidorTarefas {
 
         while (true) {
             Socket socket = servidor.accept();
-            System.out.println("Aceitando novo cliente " + socket.getPort());
+            int portaDoCliente = socket.getPort();
+            System.out.println("Aceitando novo cliente " + portaDoCliente);
 
-            Thread.sleep(20000);
+            DistribuirTarefas distribuirTarefas = new DistribuirTarefas(socket);
+            Thread threadCliente = new Thread(distribuirTarefas);
+            threadCliente.start();
         }
     }
 }
