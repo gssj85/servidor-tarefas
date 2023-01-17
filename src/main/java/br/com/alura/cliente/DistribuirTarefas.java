@@ -1,5 +1,7 @@
 package br.com.alura.cliente;
 
+import br.com.alura.servidor.ServidorTarefas;
+
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
@@ -7,8 +9,11 @@ import java.util.Scanner;
 public class DistribuirTarefas implements Runnable {
     private Socket socket;
 
-    public DistribuirTarefas(Socket socket) {
+    private ServidorTarefas servidor;
+
+    public DistribuirTarefas(Socket socket, ServidorTarefas servidor) {
         this.socket = socket;
+        this.servidor = servidor;
     }
 
     @Override
@@ -31,12 +36,15 @@ public class DistribuirTarefas implements Runnable {
                         saidaCliente.println("Confirmação comando c2");
                         break;
                     }
+                    case "fim": {
+                        saidaCliente.println("Desligando o servidor");
+                        servidor.parar();
+                        break;
+                    }
                     default: {
                         saidaCliente.println("Comando não encontrado");
                     }
                 }
-
-                System.out.println(comando);
             }
 
             System.out.println("Finalizando conexão " + socket.getPort());
