@@ -1,5 +1,6 @@
 package br.com.alura.cliente;
 
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -14,15 +15,32 @@ public class DistribuirTarefas implements Runnable {
     public void run() {
         try {
             System.out.println("Distribuindo tarefas para " + socket);
-            Scanner entrada = new Scanner(socket.getInputStream());
+            Scanner entradaCliente = new Scanner(socket.getInputStream());
+            PrintStream saidaCliente = new PrintStream(socket.getOutputStream());
 
-            while (entrada.hasNextLine()) {
-                String comando = entrada.nextLine();
+            while (entradaCliente.hasNextLine()) {
+                String comando = entradaCliente.nextLine();
+                System.out.println("Comando recebido " + comando);
+
+                switch (comando) {
+                    case "c1": {
+                        saidaCliente.println("Confirmação comando c1");
+                        break;
+                    }
+                    case "c2": {
+                        saidaCliente.println("Confirmação comando c2");
+                        break;
+                    }
+                    default: {
+                        saidaCliente.println("Comando não encontrado");
+                    }
+                }
+
                 System.out.println(comando);
             }
 
-            Thread.sleep(5000);
             System.out.println("Finalizando conexão " + socket.getPort());
+            entradaCliente.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
