@@ -15,6 +15,7 @@ public class ClienteTarefas {
             public void run() {
                 try {
                     System.out.println("Pode enviar comandos!");
+
                     PrintStream saida = new PrintStream(socket.getOutputStream());
                     Scanner teclado = new Scanner(System.in);
                     while (teclado.hasNextLine()) {
